@@ -8,11 +8,13 @@ import { PrismaService } from './prisma.service';
 
 const MANDATORY_IN_APP = new Set(['order.confirmed', 'order.cancelled', 'delivery.scheduled', 'delivery.in_transit', 'delivery.arrived', 'delivery.completed', 'delivery.partial', 'delivery.failed', 'delivery.cancelled', 'payment.authorized', 'payment.captured', 'payment.completed', 'payment.failed', 'payment.refunded', 'payout.scheduled', 'payout.completed', 'cold_chain.alert', 'rating.created']);
 const KNOWN_EVENTS = new Set([
+  'delivery.incident_reported',
   'delivery.in_transit', 'delivery.arrived',
   'order.confirmed', 'order.cancelled', 'delivery.scheduled', 'delivery.completed', 'delivery.partial', 'delivery.failed', 'delivery.cancelled',
   'payment.authorized', 'payment.captured', 'payment.completed', 'payment.failed', 'payment.refunded', 'payout.scheduled', 'payout.completed', 'cold_chain.alert', 'stock.low',
   'product.available', 'product.unavailable', 'identity.user_created', 'identity.user_disabled', 'identity.roles_changed', 'rating.created',
 ]);
+MANDATORY_IN_APP.add('delivery.incident_reported');
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const MAX_ATTEMPTS = 3;
 
@@ -222,6 +224,7 @@ function notificationCopy(event: EventEnvelope) {
     'delivery.scheduled': ['Entrega programada', `La entrega de tu ${order} ya tiene una ventana programada.`],
     'delivery.in_transit': ['Tu pedido va en camino', `La ruta de tu ${order} inició. Consulta el avance en Entregas.`],
     'delivery.arrived': ['Confirma la recepción', `El transportista llegó con tu ${order}. Abre Entregas y confirma los kilos que recibiste.`],
+    'delivery.incident_reported': ['Novedad en tu entrega', `Se registró una incidencia en la entrega de tu ${order}. Consulta el seguimiento para ver el detalle actualizado.`],
     'delivery.completed': ['Entrega completada', `La entrega de tu ${order} fue completada.`],
     'delivery.partial': ['Entrega parcial', `La entrega de tu ${order} se cerró parcialmente. El saldo no utilizado se liberó.`],
     'delivery.failed': ['No se pudo completar la entrega', `La entrega de tu ${order} no se pudo completar. Revisa el detalle del pedido.`],
